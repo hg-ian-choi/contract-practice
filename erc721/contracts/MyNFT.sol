@@ -7,11 +7,18 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
 
 contract MyNFT is ERC721, Ownable {
+    using Counters for Counters.Counter;
+
+    Counters.Counter public tokenIdCounter; // token id
+
     mapping(address => uint8) role; // 0: user, 1: admin
     mapping(uint256 => address) creator;
 
-    using Counters for Counters.Counter;
-    Counters.Counter tokenId; // token id
+    constructor(string memory _name, string memory _symbol) ERC721(_name, _symbol) {}
 
-    constructor() ERC721("Test", "T") {}
+    function safeMint(address _to) public onlyOwner {
+        uint256 tokenId = tokenIdCounter.current();
+        tokenIdCounter.increment();
+        _safeMint(_to, tokenId);
+    }
 }
