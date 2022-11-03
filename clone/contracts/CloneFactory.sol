@@ -19,7 +19,7 @@ contract CloneFactory {
         owner = msg.sender;
     }
 
-    function clone(address _implementation) internal returns (address instance) {
+    function _clone(address _implementation) internal returns (address instance) {
         assembly {
             let ptr := mload(0x40)
             mstore(ptr, 0x3d602d80600a3d3981f3363d3d373d3d3d363d73000000000000000000000000)
@@ -30,8 +30,8 @@ contract CloneFactory {
         require(instance != address(0), "ERC1167: create failed");
     }
 
-    function _clone() external returns (address identicalChild) {
-        identicalChild = clone(origin);
+    function clone() external returns (address identicalChild) {
+        identicalChild = _clone(origin);
         Implementation(identicalChild).initialize(msg.sender);
         emit NewClone(identicalChild, msg.sender);
     }
