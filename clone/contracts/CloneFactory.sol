@@ -4,7 +4,6 @@ pragma solidity >=0.8.0 <0.9.0;
 import "./Implementation.sol";
 
 contract CloneFactory {
-    address public origin;
     address public owner;
 
     event NewClone(address _newClone, address _owner);
@@ -14,8 +13,7 @@ contract CloneFactory {
         _;
     }
 
-    constructor(address _origin) {
-        origin = _origin;
+    constructor() {
         owner = msg.sender;
     }
 
@@ -30,13 +28,9 @@ contract CloneFactory {
         require(instance != address(0), "ERC1167: create failed");
     }
 
-    function clone() external returns (address identicalChild) {
-        identicalChild = _clone(origin);
+    function clone(address _origin) external returns (address identicalChild) {
+        identicalChild = _clone(_origin);
         Implementation(identicalChild).initialize(msg.sender);
         emit NewClone(identicalChild, msg.sender);
-    }
-
-    function upgradeOrigin(address _origin) external onlyOwner {
-        origin = _origin;
     }
 }
