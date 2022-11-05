@@ -1,13 +1,25 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.0 <0.9.0;
 
-import "@openzeppelin/contracts/token/ERC1155/ERC1155.sol";
-import "@openzeppelin/contracts/access/Ownable.sol";
-import "@openzeppelin/contracts/security/Pausable.sol";
-import "@openzeppelin/contracts/token/ERC1155/extensions/ERC1155Burnable.sol";
+import "@openzeppelin/contracts-upgradeable/token/ERC1155/ERC1155Upgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/security/PausableUpgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/token/ERC1155/extensions/ERC1155BurnableUpgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
+import "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol";
 
-contract Test is ERC1155, Ownable, Pausable, ERC1155Burnable {
-    constructor() ERC1155("") {}
+contract Test is Initializable, ERC1155Upgradeable, OwnableUpgradeable, PausableUpgradeable, ERC1155BurnableUpgradeable, UUPSUpgradeable {
+    constructor() {
+        _disableInitializers();
+    }
+
+    function initialize() initializer public {
+        __ERC1155_init("");
+        __Ownable_init();
+        __Pausable_init();
+        __ERC1155Burnable_init();
+        __UUPSUpgradeable_init();
+    }
 
     function setURI(string memory newuri) public onlyOwner {
         _setURI(newuri);
@@ -32,4 +44,6 @@ contract Test is ERC1155, Ownable, Pausable, ERC1155Burnable {
     function _beforeTokenTransfer(address operator, address from, address to, uint256[] memory ids, uint256[] memory amounts, bytes memory data) internal whenNotPaused override {
         super._beforeTokenTransfer(operator, from, to, ids, amounts, data);
     }
+
+    function _authorizeUpgrade(address newImplementation) internal onlyOwner override {}
 }
