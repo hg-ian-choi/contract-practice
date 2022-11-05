@@ -6,4 +6,8 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 
 contract Test is ERC1155, Ownable {
     constructor() ERC1155("") {}
+
+    function setURI(string memory newuri) public onlyOwner {
+        _setURI(newuri);
+    }
 }
