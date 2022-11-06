@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.0 <0.9.0;
 
-import "./Implementation.sol";
+import "./ITest.sol";
 
-contract CloneFactory {
+contract TestFactory {
     address public owner;
 
     event NewClone(address _newClone, address _owner);
@@ -30,7 +30,7 @@ contract CloneFactory {
 
     function clone(address _origin) external returns (address identicalChild) {
         identicalChild = _clone(_origin);
-        Implementation(identicalChild).initialize(msg.sender);
+        ITest(identicalChild).initialize(msg.sender);
         emit NewClone(identicalChild, msg.sender);
     }
 }
