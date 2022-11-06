@@ -8,6 +8,7 @@ contract TestFactory {
     using Clones for address;
 
     address public owner;
+    address public origin;
 
     event NewClone(address _newClone, address _owner);
 
@@ -32,8 +33,13 @@ contract TestFactory {
     // }
 
     function _clone(address _origin) external returns (address identicalChild) {
-        identicalChild = _origin.clone();
+        // identicalChild = _origin.clone();
+        identicalChild = origin.clone();
         ITest(identicalChild).initialize(msg.sender);
         emit NewClone(identicalChild, msg.sender);
+    }
+
+    function upgradeOrigin(address _origin) public {
+        origin = _origin;
     }
 }
