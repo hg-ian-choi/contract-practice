@@ -32,14 +32,14 @@ contract TestFactory {
     //     require(instance != address(0), "ERC1167: create failed");
     // }
 
-    function _clone(address _origin) external returns (address identicalChild) {
+    function _clone() external returns (address identicalChild) {
         // identicalChild = _origin.clone();
         identicalChild = origin.clone();
         ITest(identicalChild).initialize(msg.sender);
         emit NewClone(identicalChild, msg.sender);
     }
 
-    function upgradeOrigin(address _origin) public {
+    function upgradeOrigin(address _origin) public onlyOwner {
         origin = _origin;
     }
 }
